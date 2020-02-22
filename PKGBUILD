@@ -4,7 +4,7 @@ url='https://wiki.ros.org/qt_gui_cpp'
 pkgname='ros-melodic-qt-gui-cpp'
 pkgver='0.3.16'
 arch=('i686' 'x86_64' 'aarch64' 'armv7h' 'armv6h')
-pkgrel=1
+pkgrel=2
 license=('BSD')
 
 ros_makedepends=(
@@ -36,8 +36,15 @@ depends=(
 )
 
 _dir="qt_gui_core-${pkgver}/qt_gui_cpp"
-source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/ros-visualization/qt_gui_core/archive/${pkgver}.tar.gz")
-sha256sums=('efa5ecf7ec22de606b3c0e039f43aacc2f2d79d74d7e17ecceecf2cafd22d128')
+source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/ros-visualization/qt_gui_core/archive/${pkgver}.tar.gz"
+        "fix-typesystem.patch"::"https://github.com/stertingen/qt_gui_core/commit/f3d0b885d4b9dc074553268ee7701b45240a0bd8.patch")
+sha256sums=('efa5ecf7ec22de606b3c0e039f43aacc2f2d79d74d7e17ecceecf2cafd22d128'
+            'dfc3a3a8465eecacaf81f3d8ac6b90fec7b26f3374eaa905e8696b45b9aabf31')
+
+prepare() {
+    cd ${srcdir}/${_dir}/..
+    patch -p1 < ${srcdir}/fix-typesystem.patch
+}
 
 build() {
 	# Use ROS environment variables.
